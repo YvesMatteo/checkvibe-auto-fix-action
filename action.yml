@@ -1,0 +1,19 @@
+name: 'CheckVibe Auto-Fix'
+description: 'Automatically fix security vulnerabilities found by CheckVibe'
+inputs:
+  dispatch_token:
+    description: 'Token for authenticating with CheckVibe API'
+    required: true
+  job_id:
+    description: 'Auto-fix job ID'
+    required: true
+  checkvibe_api_url:
+    description: 'CheckVibe API URL'
+    required: true
+    default: 'https://checkvibe.dev'
+  ai_api_key:
+    description: 'AI provider API key (stored as GitHub secret CHECKVIBE_AI_KEY)'
+    required: true
+runs:
+  using: 'node20'
+  main: 'dist/index.js'

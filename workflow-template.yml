@@ -1,0 +1,50 @@
+# CheckVibe Auto-Fix Workflow
+# Copy this file to .github/workflows/checkvibe-auto-fix.yml in your repo
+#
+# Setup:
+# 1. Add your AI API key as a GitHub secret named CHECKVIBE_AI_KEY
+#    - Claude: https://console.anthropic.com/settings/keys
+#    - OpenAI: https://platform.openai.com/api-keys
+#    - Gemini: https://aistudio.google.com/apikey
+# 2. Select your AI provider in CheckVibe Admin > Auto-Fix Agent
+
+name: CheckVibe Auto-Fix
+on:
+  workflow_dispatch:
+    inputs:
+      dispatch_token:
+        description: 'CheckVibe dispatch token'
+        required: true
+      job_id:
+        description: 'Auto-fix job ID'
+        required: true
+      checkvibe_api_url:
+        description: 'CheckVibe API URL'
+        required: true
+        default: 'https://checkvibe.dev'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run CheckVibe Auto-Fix
+        uses: YvesMatteo/checkvibe-auto-fix-action@main
+        with:
+          dispatch_token: ${{ github.event.inputs.dispatch_token }}
+          job_id: ${{ github.event.inputs.job_id }}
+          checkvibe_api_url: ${{ github.event.inputs.checkvibe_api_url }}
+          ai_api_key: ${{ secrets.CHECKVIBE_AI_KEY }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
